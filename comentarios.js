@@ -58,7 +58,7 @@ quando voçê programar seus codigos tente não deixalos tão especificos ,
 por que você precisar mudar alguma estrutura do seu site ou do seu projeto o 
 ideal que seu codigo  ele têm que se adaptar o mais facil possivel em termos de manutenção.
 é isso que nós chamos de abstração, é você não  programar de uma forma ingessada de mais 
-e dessa forma 
+é dessa forma  quer não devemos programar :
 
 var name = document.querySelector("#exampleInputName");
 /**   |       |        \=> estou selecionado um elemento da arvore.
@@ -118,16 +118,16 @@ var name = document.querySelector("#exampleInputName");
 ela ta muito ingessada , não pode modificar os nomes , ta tudo ammarrado aquele layout
 o ideal é que seu codigo seja autosuficiente , inteligente ao ponto de se adaptar.
 
-então agente vai pegar esse processo que fizemos agora um pouco mais ionteligente 
+então agente vai pegar esse processo que fizemos agora um pouco mais inteligente 
 para isso nós vamos  selecionar aquele formulário  e vamos dizer assim você achou o formulario ,
 achei entra dentro dele e pra cada campo que você encontrar faça uma rotina  de codigo 
 então para cada campo é um comando que nós temos é um metodo chamado forech,
 vou acessar o formulario e dizer assim , achou o formulario , achei , então esse formulario ponto forech
 para cada  campo dentro dele para cada informação que você encontar dentro dele  se ele tiver cinco campos
-ou se ele tiver cinquenta   o mesmo trecho de códifo vai ser o suficiente para percorrer essa informção ai
- dentro .
+ou se ele tiver cinquenta   o mesmo trecho de código vai ser o suficiente para percorrer essa informção ai
+dentro .
 
- var fields =  document.querySelectorAll("#form-user-create [name] ");
+ var fields =  document.querySelectorAll("#form-user-create [name]");
       |                        |             \-> aqui estou selecionando id do frmulario 
       |                        |                  mais eu quero encontar todos os meus campos , os que esse campos tém em comum o name ;
       |                        |                    traz para min todos os campos que tém name
@@ -144,8 +144,101 @@ ou se ele tiver cinquenta   o mesmo trecho de códifo vai ser o suficiente para 
          {
                console.log(field)
          }
-     );    
+     );   
+
+
+     G6 -  If e Else 
+
+     
+
+var fields = document.querySelectorAll("#form-user-create [name]")
+
+fields.forEach(
+    function(field,index)
+    {
+        vamos fazer um if para cada campo que ele encontar 
+        if( field.name == "gender")
+        = -> é atribuição
+        == -> comparção de valor 
+        === -> comparção de valor e tipo de dado 
+        primeiro eu preciso detectar é o gender 
+        {
+              
+        }else
+        {
+
+        }
+    }
+);
+
  
+G7 - Json 
+ 
+Como podemos pegar essas informçãoes que vieram do formulario e mandar isso pra algum lugar 
+é possivel por exemplo nós criamos um padrão de comunicação fazebdo com que um outro site 
+utro aplicatico  até mesmo outra linguagem de programção  consiga consumir essa informção
+agente cria um padrão de comunicação  outras linguagem e banco de dados eles podem entender 
+e se eles entenderem eles podem consumir essa informação, o padrão mai9s conhecido é o javascript object notation
+
+
+G8 - Eventos
+
+O que é eventos no Js ?
+
+Javascript ela é uma lingaugem reativa ela interage com as atividades do  usuario 
+, e o usaurio pode interagir com a nossa aplicação seja ela um site ou um aplicativo 
+web , ele pode interagir pelo formulario pelo teclado pelo mouse por tempo de navegação 
+então o evento é exatamente uma ação que acontece na nossa aplicação que dispara a alguma 
+reação, e essa reação pode ser uma função que reage a um evento como que  é que funciona
+isso .
+Nós customamos dizer que o javascript escuta muito bem , o js parece a vizinha que tem ai do
+lado da sua casa .
+basicamento o Js ele fica tento atudo que ta acontendo ná aplicação.
+por exemplo você usou o mouse só passou em encima de alguma coisa. 
+você poderia criar um evento .
+o método 
+addEventListener é o mesmo que prepara para ouvir melhor.
+
+
+SPA - Single Page aplication Aplicção de pagina Unica.
+
+G9 - Tarbalhando com funções 
+
+O que é uma função ? 
+ è um trecho de codigo que retorna alguma coisa normalmente uma  valor,
+ normalmente na linguagens de programção Existem as funçãoe  e as subRotinas ,
+ a diferença entre elas é que uma função semp´re retotna um valor e a subrotina
+ é um tipo  de funçao que só executra um codigo e não tem retorno.
+ no caso do javascript eu vou usar a palavra function para as dusa coisa .
+
+ G10 - Programação Orientada a Objetos e Mvc
+
+ Programção Orientada a Objeto ela trabalha com classes atributos metodos 
+ e os demais recursos que a orientação a objetos  traz para nós o encapsulamento 
+ e o controle ao acesso  a informação e o reuso a estrutura das classes e como tudo 
+isso é pratico par nós . 
+
+além de ajudar você a programar melhor trabalhar com seus códigos de forma umpouco mais abstrata
+vamos dizer assim de uma forma que você possa reutilizar vários modulos. 
+isso também ajuda para outros conseitos  como mvc 
+ajuda na separação do visual do tartamentos das informações ao tratamento ao dado do seu negoçio.
+
+
+
+UM OBJETO É UMA VARIAVEL QUE INSTANCIA  OU REPRESENTA UMA CLASSE.
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
