@@ -9,13 +9,13 @@ class User
      * parte de escopo area de atuação.
      * 
      * Repare também que por enquanto a classe não tém nada 
-     * então uma classe que só tem o ome dela não serve para nada .
+     * então uma classe que só tem o nome dela não serve para nada .
      * o que importa na verdade não é bem a classe e sim que está dentro dela .
-     * pensa na classe  como fosse uma pasta zipada se não tiver nada la dentro naço faz 
+     * pensa na classe  como fosse uma pasta zipada se não tiver nada la dentro não faz 
      * sentindo ela esta zipada.
      * 
-     * a primeirra cois que você vai fazer é cria o método constructor quando voçê instanciar uma
-     * a primeira coisa que vai chamar esse metodo onde passamos os parametros para trabalhar dentro da ]
+     * a primeirra coisa que você vai fazer é cria o método constructor quando voçê instanciar uma classe
+     * a primeira coisa que vai chamar esse metodo onde passamos os parametros para trabalhar dentro da 
      * nossa classe.
      * 
      * Métodoss são açoes que seram executada. 
