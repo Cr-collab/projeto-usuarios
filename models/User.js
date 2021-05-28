@@ -35,14 +35,66 @@ class User
 
     constructor(name,gender, birth,country,email,passaword,photo,admin)
     {
-             this.name                =                            name;
+             this._name                =                            name;
         //   este.atributo   esta sendo atribuido a       variavel name recebido com parametro do contructor.
-             this.gender = gender; 
-             this.birth = birth;
-             this.country = country;
-             this.email = email;
+             this._gender = gender; 
+             this._birth = birth;
+             this._country = country;
+             this._email = email;
              this._passaword = passaword;
-             this.photo = photo;
-             this.admin = admin;
+             this._photo = photo;
+             this._admin = admin;
+             this._register = new Date();
     }
+
+    get register ()
+    {
+        return this._register
+    }
+
+    get name()
+    {
+        return this._name
+    }
+    get gender()
+    {
+        return this._gender
+    }
+
+    get birth()
+    {
+        return this._birth
+    }
+
+    get country()
+    {
+        return this._country
+    }
+
+    get email()
+    {
+        return this._email
+    }
+
+    get passaword ()
+    {
+        return this._passaword
+    }
+
+    get photo()
+    {
+        return this._photo
+    }
+
+    get admin()
+    {
+        return this._admin
+    }
+
+    set photo(value)
+    {
+        this._photo = value
+    }
+
+
 }
