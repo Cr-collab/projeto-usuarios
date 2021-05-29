@@ -1,15 +1,64 @@
 
+
 class UserController
 {
-    constructor(formId, tableId)
+    constructor(formIdCreate,formIdUpdate, tableId)
     {
-            this.formEl =  document.getElementById(formId);
+            this.formEl =  document.getElementById(formIdCreate);
+            this.formUpdateEl =  document.getElementById(formIdUpdate);
             this.tableEl =  document.getElementById(tableId);
             this.OnSubmit();
+            this.onEdit();
+            
     }
 
 
-    
+    onEdit()
+    {
+        document.querySelector("#box-user-update .btn-cancel").addEventListener("click",e => 
+        {
+          this.showPanelCreate();
+                
+        });
+
+        this.formUpdateEl.addEventListener("submit", event =>
+        {
+            event.preventDefault();
+
+            let btn =this.formUpdateEl.querySelector("[type=submit]");    
+
+            btn.disabled = true;
+
+            let values = this.getValues(this.formUpdateEl);
+
+            let index = this.formUpdateEl.dataset.trIndex
+
+            let tr =  this.tableEl.rows[index];
+
+            tr.dataset.user = JSON.stringify(values);
+
+            tr.innerHTML =
+     `
+  
+     <td>
+                      <img src="${values.photo}" alt="User Image" class="img-circle img-sm">
+                      </td>
+                      <td>${values.name}</td>
+                      <td>${values.email}</td>
+                      <td>${(values.admin) ? "Sim" : "Não"}</td>
+                      <td>${Utils.dateFormat(values.register)}</td>
+                      <td>
+                      <button type="button" class="btn btn-primary btn-edit btn-xs btn-flat">Editar</button>
+                      <button type="button" class="btn btn-danger btn-xs btn-flat">Excluir</button>
+     </td>`;
+
+
+     this.addEventsTr(tr);
+     this.updateCount();
+
+
+        })
+    }
    
 
     OnSubmit()
@@ -25,7 +74,18 @@ class UserController
              let btn =this.formEl.querySelector("[type=submit]");    
 
              btn.disabled = true;
-             let values = this.getValues();
+             let values = this.getValues(this.formEl);
+
+        
+
+             if(!values) {
+                 return false 
+                 
+             }
+     
+             
+
+
              
              this.getPhoto().then(
                  (content)=>
@@ -63,7 +123,7 @@ class UserController
                }
            })
    
-           console.log(elements)
+
    
            let file =  elements[0].files[0];
    
@@ -97,6 +157,10 @@ addLine(dataUser)
       
     let tr = document.createElement('tr');
 
+    tr.dataset.user =JSON.stringify(dataUser)
+
+
+
     tr.innerHTML =
      `
   
@@ -108,19 +172,122 @@ addLine(dataUser)
                       <td>${(dataUser.admin) ? "Sim" : "Não"}</td>
                       <td>${Utils.dateFormat(dataUser.register)}</td>
                       <td>
-                      <button type="button" class="btn btn-primary btn-xs btn-flat">Editar</button>
+                      <button type="button" class="btn btn-primary btn-edit btn-xs btn-flat">Editar</button>
                       <button type="button" class="btn btn-danger btn-xs btn-flat">Excluir</button>
      </td>
 
      `;
 
+     this.addEventsTr(tr);
+
      this.tableEl.appendChild(tr);
 
-
+     this.updateCount();
      
 }
 
-getValues()
+
+addEventsTr(tr)
+{
+    
+    tr.querySelector(".btn-edit").addEventListener("click" , e =>
+    {
+       let json = JSON.parse(tr.dataset.user);
+
+       let form = document.querySelector("#form-user-update")
+
+       form.dataset.trIndex = tr.sectionRowIndex;
+
+          for (let name in json)
+          {
+           
+               let field = form.querySelector("[name=" + name.replace("_" , "") + "]");
+
+               if(field)
+               {
+
+
+                   switch(field.type)
+                   {
+                       case  'file':
+                           continue;
+                       break;
+                       
+                       case 'radio':
+                           field = form.querySelector("[name=" + name.replace("_" , "") + "][value=" + json[name] + "]");
+                           field.checked = true;
+                        break;
+                        case 'checkbox':
+                           field.checked = json[name]
+                        break;
+
+                        default:
+                            field.value = json[name]
+
+
+                   }
+                   field.value = json[name]
+               }
+
+               
+          }
+
+       this.showPanelUpadte();
+    })
+}
+
+
+showPanelCreate()
+{
+    document.querySelector('.box-edit').style = "display:none"  
+    document.querySelector('.box-register').style = "display:block"
+}
+
+
+showPanelUpadte()
+{
+    document.querySelector('.box-register').style = "display:none"
+    document.querySelector('.box-edit').style = "display:block"
+}
+
+
+updateCount()
+{
+     let numberUsers = 0;
+     let numberAdmin = 0;
+   [...this.tableEl.children].forEach(tr =>{
+
+    numberUsers++;
+
+
+    let user = JSON.parse(tr.dataset.user);
+    
+
+
+    if(user._admin){ numberAdmin++}
+
+    /*
+    [...tr.children].forEach(td => {
+       
+        if(td.innerHTML === 'Sim')
+        {
+            numberAdmin++;
+        }
+       
+    })
+    */
+
+   })
+   
+
+  document.querySelector('#number-users').innerHTML = numberUsers
+  document.querySelector('#number-users-admin').innerHTML = numberAdmin
+
+}
+
+
+
+getValues(formEl)
 {
       
 
@@ -129,7 +296,7 @@ getValues()
 
    
                 
-        [...this.formEl.elements].forEach(
+        [...formEl.elements].forEach(
             // para cada campo que tiver faca   
                 function(field,index)
                 {
@@ -138,6 +305,7 @@ getValues()
                        {
                              field.parentElement.classList.add('has-error');
                              isValid = false;
+            
                        }
 
                     if(field.name == "gender")
@@ -160,13 +328,18 @@ getValues()
                         user[field.name] = field.value;
                         // aqui estamos acessando objeto user e colocando valores selecionados no formulario
                     }
+
                 }
             );
+
+        
 
             if(!isValid)
             {
                return false;
             }
+
+    
 
              return new User(
                 user.name,
