@@ -33,7 +33,7 @@ class User
      * 
      */
 
-    constructor(name,gender, birth,country,email,passaword,photo,admin)
+    constructor(name,gender, birth,country,email,password,photo,admin)
     {
              this._name                =                            name;
         //   este.atributo   esta sendo atribuido a       variavel name recebido com parametro do contructor.
@@ -41,7 +41,7 @@ class User
              this._birth = birth;
              this._country = country;
              this._email = email;
-             this._passaword = passaword;
+             this._password = password;
              this._photo = photo;
              this._admin = admin;
              this._register = new Date();
@@ -76,7 +76,7 @@ class User
         return this._email
     }
 
-    get passaword ()
+    get password ()
     {
         return this._passaword
     }

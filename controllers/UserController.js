@@ -31,30 +31,66 @@ class UserController
 
             let values = this.getValues(this.formUpdateEl);
 
+
+            this.showPanelCreate();
+
+
+
             let index = this.formUpdateEl.dataset.trIndex
+            // aqui esta o  valor do indice 
+
+
 
             let tr =  this.tableEl.rows[index];
+            // aqui esta o indice da linha que querp acessar
 
-            tr.dataset.user = JSON.stringify(values);
+            let userOld = JSON.parse(tr.dataset.user);
+
+            let result = Object.assign({}, userOld , values);
+
+           
+
+     this.getPhoto(this.formUpdateEl).then(
+        (content)=>
+        {
+            
+            if(!values.photo)
+            {result._photo = userOld._photo;}
+            else{
+                result._photo = content;
+            }
+
+            tr.dataset.user = JSON.stringify(result);
+         // aqui esta sobscrevendo os valores que já esdtavam nessa tr 
 
             tr.innerHTML =
-     `
-  
-     <td>
-                      <img src="${values.photo}" alt="User Image" class="img-circle img-sm">
-                      </td>
-                      <td>${values.name}</td>
-                      <td>${values.email}</td>
-                      <td>${(values.admin) ? "Sim" : "Não"}</td>
-                      <td>${Utils.dateFormat(values.register)}</td>
-                      <td>
-                      <button type="button" class="btn btn-primary btn-edit btn-xs btn-flat">Editar</button>
-                      <button type="button" class="btn btn-danger btn-xs btn-flat">Excluir</button>
-     </td>`;
-
-
-     this.addEventsTr(tr);
-     this.updateCount();
+            `
+         
+            <td>
+                             <img src="${result._photo}" alt="User Image" class="img-circle img-sm">
+                             </td>
+                             <td>${result._name}</td>
+                             <td>${result.email}</td>
+                             <td>${(result._admin) ? "Sim" : "Não"}</td>
+                             <td>${Utils.dateFormat(result._register)}</td>
+                             <td>
+                             <button type="button" class="btn btn-primary btn-edit btn-xs btn-flat">Editar</button>
+                             <button type="button" class="btn btn-danger btn-xs btn-flat">Excluir</button>
+            </td>`;
+       
+       
+            this.addEventsTr(tr);
+            this.updateCount();
+            
+            this.formUpdateEl.reset();
+            this.showPanelCreate();
+            btn.disabled = false;
+        },
+        (e) =>
+        {
+            console.error(e)
+        }
+    );
 
 
         })
@@ -80,14 +116,14 @@ class UserController
 
              if(!values) {
                  return false 
-                 
+                
              }
      
              
 
 
              
-             this.getPhoto().then(
+             this.getPhoto(this.formEl).then(
                  (content)=>
                  {
                      values.photo = content;
@@ -108,14 +144,14 @@ class UserController
         });
     } 
     
- getPhoto()
+ getPhoto(formEl)
  {
 
     return new Promise((resolve , reject ) =>
     {
         let fileReader = new FileReader();
 
-        let elements = [...this.formEl.elements].filter(item =>
+        let elements = [...formEl.elements].filter(item =>
            {
                if (item.name === 'photo')
                {
@@ -147,17 +183,48 @@ class UserController
         }
     });
      
- }   
+ } 
+ 
+ 
+ getUsersStorage()
+ {
+         let users = [];
+    if(sessionStorage.getItem("users"))
+    {
+       users = JSON.parse(sessionStorage.getItem("users")) 
+    }
+ }
+
+ selectAll()
+ {
+    let users = this.getUsersStorage();
+
+ }
 
 
+
+insert(data)
+{
+
+    
+   let users = this.getUsersStorage();
+
+    users.push(data);
+
+    sessionStorage.setItem("users",JSON.stringify(users))
+
+
+}
     
 addLine(dataUser)
 {
     
       
     let tr = document.createElement('tr');
+ 
+      this.insert(dataUser);
 
-    tr.dataset.user =JSON.stringify(dataUser)
+    tr.dataset.user = JSON.stringify(dataUser)
 
 
 
@@ -173,7 +240,7 @@ addLine(dataUser)
                       <td>${Utils.dateFormat(dataUser.register)}</td>
                       <td>
                       <button type="button" class="btn btn-primary btn-edit btn-xs btn-flat">Editar</button>
-                      <button type="button" class="btn btn-danger btn-xs btn-flat">Excluir</button>
+                      <button type="button" class="btn btn-danger btn-delete btn-xs btn-flat">Excluir</button>
      </td>
 
      `;
@@ -189,32 +256,55 @@ addLine(dataUser)
 
 addEventsTr(tr)
 {
+    tr.querySelector(".btn-delete").addEventListener("click" , e =>
+    {
+           if(confirm("Realmente deseja exlcluir esse usuario"))
+           {
+               tr.remove();
+
+               this.updateCount();
+           }
+    });
     
     tr.querySelector(".btn-edit").addEventListener("click" , e =>
     {
        let json = JSON.parse(tr.dataset.user);
+       // que tem os dados do usuario
 
-       let form = document.querySelector("#form-user-update")
 
-       form.dataset.trIndex = tr.sectionRowIndex;
+
+      
+
+
+       this.formUpdateEl.dataset.trIndex = tr.sectionRowIndex;
+       /// aqui esta o indice da minha linha 
+
 
           for (let name in json)
           {
-           
-               let field = form.querySelector("[name=" + name.replace("_" , "") + "]");
+                
+               let field = this.formUpdateEl.querySelector("[name=" + name.replace("_" , "") + "]");
+                           
+            // a variavel field recebe a pesquisa que esta ocorrendo dentro do formulario , essa pesquisa esta perguntando tem elementos com name 
+            //, se tiver pega a proprieda name do json tirando uderline e ver se tem essa propriedade ai.
+
+                 //encontrou esse campo           
 
                if(field)
+               //verifica se esse campo existe 
+                // se ele existir ai sim atribuimos valor nele 
                {
 
 
+                  
                    switch(field.type)
                    {
-                       case  'file':
+                        case  'file':
                            continue;
-                       break;
+                        break;   
                        
                        case 'radio':
-                           field = form.querySelector("[name=" + name.replace("_" , "") + "][value=" + json[name] + "]");
+                           field = this.formUpdateEl.querySelector("[name=" + name.replace("_" , "") + "][value=" + json[name] + "]");
                            field.checked = true;
                         break;
                         case 'checkbox':
@@ -223,14 +313,22 @@ addEventsTr(tr)
 
                         default:
                             field.value = json[name]
+                             // esse field ja  tem o nosso elemento .value para definir o valor dele  
+                              //o valor que ele vai receber  objeto json na propriedade name 
+                     
+
 
 
                    }
-                   field.value = json[name]
+
+                 
+               
                }
 
                
           }
+
+          this.formUpdateEl.querySelector(".photo").src = json._photo;
 
        this.showPanelUpadte();
     })
@@ -289,6 +387,7 @@ updateCount()
 
 getValues(formEl)
 {
+   
       
 
        let user = {};
