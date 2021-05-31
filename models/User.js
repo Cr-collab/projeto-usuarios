@@ -37,6 +37,7 @@ class User
     {
              this._name                =                            name;
         //   este.atributo   esta sendo atribuido a       variavel name recebido com parametro do contructor.
+             this._id ;
              this._gender = gender; 
              this._birth = birth;
              this._country = country;
@@ -45,6 +46,11 @@ class User
              this._photo = photo;
              this._admin = admin;
              this._register = new Date();
+    }
+
+    get id()
+    {
+        return this._id;
     }
 
     get register ()
@@ -94,6 +100,100 @@ class User
     set photo(value)
     {
         this._photo = value
+    }
+
+
+    loadFromJSON(json)
+    {
+          for (let name in json)
+          {
+              switch(name) 
+              {
+                  case "_register":
+                    this[name] = new Date(json[name])
+                  break;
+                  default:
+                    this[name] =json[name]
+
+              }
+             
+          }
+    }
+
+            
+        static getUsersStorage()
+        {
+            let users = [];
+            if(localStorage.getItem("users"))
+            {
+            users = JSON.parse(localStorage.getItem("users")) 
+            }
+            return users
+        }
+
+
+     getNewId()
+     {
+         let UsersId = parseInt(localStorage.getItem("UsersId"));
+           
+       if(!UsersId.id)  UsersId = 0;
+       UsersId++;
+
+       localStorage.setItem("UserId" , UsersId)
+       return UsersId
+
+     }
+
+    save()// esse metodo ele vai saber como é que salva o nosso usuario no storage 
+    {
+                
+           
+            
+            let users = User.getUsersStorage();
+
+            if(this._id > 0 )
+            {
+               users.map(u=>{
+                     if(u._id == this.id)
+                     {
+                        Object.assign(u, this)
+                     }
+
+                   return u;
+               })
+
+            }else
+            {
+                 this._id = this.getNewId()
+
+                 users.push(this);
+
+                 
+            }
+
+
+            localStorage.setItem("users",JSON.stringify(users))
+
+           
+
+
+    }
+
+    remove()
+    {
+        let users = User.getUsersStorage();
+
+
+        users.forEach((userData, index) => {
+            
+             if(this._id == userData._id)
+             {
+                  users.splice(index, 1)
+             }
+
+        });
+
+        localStorage.setItem("users",JSON.stringify(users))
     }
 
 
